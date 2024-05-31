@@ -18,12 +18,13 @@ const appStyle = {
   justifyContent: 'center',
   alignItems: 'center',
   height: '100vh',
-  backgroundColor: '#f0f0f0',
+  backgroundColor: 'black',
 };
 
 const itemStyle = {
   padding: '8px',
   border: '1px solid #ccc',
+  borderRadius: '10px',
   marginBottom: '8px',
   backgroundColor: '#f9f9f9',
   cursor: 'grab',
