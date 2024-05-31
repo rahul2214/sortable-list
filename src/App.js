@@ -4,7 +4,7 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 import './App.css';
 
 const containerStyle = {
-  width: '300px', // Adjust the container width as needed
+  width: '300px',
   margin: '0 auto',
   border: '1px solid #ccc',
   borderRadius: '16px',
