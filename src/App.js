@@ -1,25 +1,96 @@
-import logo from './logo.svg';
+import React, { useState } from 'react';
+import { DndProvider, useDrag, useDrop } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 import './App.css';
 
-function App() {
+const containerStyle = {
+  width: '300px', // Adjust the container width as needed
+  margin: '0 auto',
+  border: '1px solid #ccc',
+  borderRadius: '16px',
+  backgroundColor: 'lightpink',
+  marginTop: '10px',
+  padding: '30px',
+  
+};
+const appStyle = {
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  height: '100vh',
+  backgroundColor: '#f0f0f0',
+};
+
+const itemStyle = {
+  padding: '8px',
+  border: '1px solid #ccc',
+  marginBottom: '8px',
+  backgroundColor: '#f9f9f9',
+  cursor: 'grab',
+  textAlign: 'center'
+};
+
+const initialItems = [
+  { id: 1, text: 'Item 1' },
+  { id: 2, text: 'Item 2' },
+  { id: 3, text: 'Item 3' },
+  { id: 4, text: 'Item 4' },
+  { id: 5, text: 'Item 5' },
+  { id: 6, text: 'Item 6' },
+];
+
+const ItemType = 'LIST_ITEM';
+
+const ListItem = ({ item, index, moveItem }) => {
+  const [, ref] = useDrag({
+    type: ItemType,
+    item: { index },
+  });
+
+  const [, drop] = useDrop({
+    accept: ItemType,
+    hover: (draggedItem) => {
+      if (draggedItem.index !== index) {
+        moveItem(draggedItem.index, index);
+        draggedItem.index = index;
+      }
+    },
+  });
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div ref={(node) => ref(drop(node))} style={itemStyle}>
+      {item.text}
     </div>
   );
-}
+};
+
+const SortableList = () => {
+  const [items, setItems] = useState(initialItems);
+
+  const moveItem = (fromIndex, toIndex) => {
+    const updatedItems = [...items];
+    const [movedItem] = updatedItems.splice(fromIndex, 1);
+    updatedItems.splice(toIndex, 0, movedItem);
+    setItems(updatedItems);
+  };
+
+  return (
+    <div style={containerStyle}>
+      {items.map((item, index) => (
+        <ListItem key={item.id} item={item} index={index} moveItem={moveItem} />
+      ))}
+    </div>
+  );
+};
+
+const App = () => {
+  return (
+    <div style={appStyle}>
+    <DndProvider backend={HTML5Backend} >
+      <SortableList />
+    </DndProvider>
+    </div>
+  );
+};
 
 export default App;
